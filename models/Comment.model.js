@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
 const commentSchema = mongoose.Schema({
-  text: String,
   user: {
     ref: "User",
     type: mongoose.SchemaTypes.ObjectId,
   },
-  new: {
+  text: String,
+  news: {
     ref: "New",
     type: mongoose.SchemaTypes.ObjectId,
   },

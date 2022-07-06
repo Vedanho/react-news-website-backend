@@ -1,16 +1,16 @@
-const New = require("../models/New..model");
+const New = require("../models/News..model");
 
 module.exports.newControllers = {
   createNew: async (req, res) => {
     try {
-      const { picture, title, text, category } = req.body;
+      const { picture, title, text, category, user } = req.body;
 
       const createdNew = await New.create({
         picture,
         title,
         text,
         category,
-        user: req.param.id,
+        user,
       });
 
       return res.json(createdNew);
@@ -33,7 +33,8 @@ module.exports.newControllers = {
       const updatedNew = await New.findByIdAndUpdate(req.params.id, {
         text: req.body.text,
       });
-      return res.json(updatedNew);
+      const improvedNew = await New.findById(req.params.id)
+      return res.json(improvedNew);
     } catch (error) {
       return res.status(401).json(error.message);
     }
@@ -41,7 +42,7 @@ module.exports.newControllers = {
 
   deleteNew: async (req, res) => {
     try {
-      New.findByIdAndRemove(req.params.id);
+      await New.findByIdAndRemove(req.params.id);
       return res.json("Новость удалена");
     } catch (error) {
       return res.status(401).json(error.message);

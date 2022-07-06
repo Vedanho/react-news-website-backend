@@ -7,7 +7,7 @@ module.exports.categoryControllers = {
       const newCategory = await Category.create({
         name,
       });
-       res.json(newCategory);
+      res.json(newCategory);
     } catch (error) {
       return res.status(401).json(error.message);
     }
@@ -27,17 +27,19 @@ module.exports.categoryControllers = {
       const updatedCategory = await Category.findByIdAndUpdate(req.params.id, {
         name: req.body.name,
       });
-      return res.json(updatedCategory);
+      const newCategory = await Category.findById(req.params.id);
+      return res.json(newCategory);
     } catch (error) {
-        return res.status(401).json(error.message);
+      return res.status(401).json(error.message);
     }
   },
 
   deleteCategory: async (req, res) => {
     try {
-        Category.findByIdAndRemove(req.params.id)
+      await Category.findByIdAndRemove(req.params.id);
+      return res.json("Категория удалена");
     } catch (error) {
-        return res.status(401).json(error.message)
+      return res.status(401).json(error.message);
     }
-  }
+  },
 };
