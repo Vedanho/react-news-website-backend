@@ -1,7 +1,7 @@
 const User = require("../models/User.model");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken")
-require("dotenv").config()
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 module.exports.userControllers = {
   createUser: async (req, res) => {
@@ -14,9 +14,10 @@ module.exports.userControllers = {
       );
 
       const newUser = await User.create({
-        login:login,
-        password: hash
+        login: login,
+        password: hash,
       });
+
       return res.json(newUser);
     } catch (error) {
       return res.status(401).json(error.message);
@@ -57,28 +58,28 @@ module.exports.userControllers = {
     try {
       const { login, password } = req.body;
 
-      const candidate = User.findOne({ login: login });
+      const candidate = await User.findOne({ login: login });
 
       if (!candidate) {
-        return res.status(400).json({error: "Неверный логин"});
+        return res.status(401).json({ error: "Неверный логин" });
       }
 
       const valid = await bcrypt.compare(password, candidate.password);
 
       if (!valid) {
-        return res.status(400).json({error: "Неверный пароль"})
+        return res.status(401).json({ error: "Неверный пароль" });
       }
 
       const payload = {
         id: candidate._id,
-        login: candidate.login
-      }
+        login: candidate.login,
+      };
 
       const token = await jwt.sign(payload, process.env.SECRET_JWT_KEY, {
-        expiresIn: "48h"
-      })
+        expiresIn: "48h",
+      });
 
-      return res.json({token})
+      return res.json({ token });
     } catch (error) {
       return res.status(401).json(error.message);
     }
