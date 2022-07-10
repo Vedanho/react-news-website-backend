@@ -1,11 +1,11 @@
-const New = require("../models/News..model");
+const News = require("../models/News..model");
 
 module.exports.newControllers = {
   createNew: async (req, res) => {
     try {
       const { picture, title, text, category, user } = req.body;
 
-      const createdNew = await New.create({
+      const createdNew = await News.create({
         picture,
         title,
         text,
@@ -21,7 +21,7 @@ module.exports.newControllers = {
 
   getNews: async (req, res) => {
     try {
-      const news = await New.find();
+      const news = await News.find();
       return res.json(news);
     } catch (error) {
       return res.status(401).json(error.message);
@@ -30,10 +30,10 @@ module.exports.newControllers = {
 
   updateNew: async (req, res) => {
     try {
-      const updatedNew = await New.findByIdAndUpdate(req.params.id, {
+      const updatedNew = await News.findByIdAndUpdate(req.params.id, {
         text: req.body.text,
       });
-      const improvedNew = await New.findById(req.params.id)
+      const improvedNew = await News.findById(req.params.id);
       return res.json(improvedNew);
     } catch (error) {
       return res.status(401).json(error.message);
@@ -42,10 +42,19 @@ module.exports.newControllers = {
 
   deleteNew: async (req, res) => {
     try {
-      await New.findByIdAndRemove(req.params.id);
+      await News.findByIdAndRemove(req.params.id);
       return res.json("Новость удалена");
     } catch (error) {
       return res.status(401).json(error.message);
+    }
+  },
+
+  getNewsById: async (req, res) => {
+    try {
+      const definiteNews = await News.findById(req.params.id);
+      return res.json(definiteNews);
+    } catch (error) {
+      return res.status(400).json(error.message);
     }
   },
 };
