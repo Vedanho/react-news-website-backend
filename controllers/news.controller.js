@@ -1,3 +1,4 @@
+const Comment = require("../models/Comment.model");
 const News = require("../models/News..model");
 
 module.exports.newControllers = {
@@ -51,7 +52,13 @@ module.exports.newControllers = {
 
   getNewsById: async (req, res) => {
     try {
-      const definiteNews = await News.findById(req.params.id);
+      const definiteNews = await News.findById(req.params.id).lean();
+      if (!definiteNews) {
+        return res.status(404).json("Новость не найдена")
+      }
+      const comments = await Comment.find({news: req.params.id})
+      
+      definiteNews.comments = comments
       return res.json(definiteNews);
     } catch (error) {
       return res.status(400).json(error.message);

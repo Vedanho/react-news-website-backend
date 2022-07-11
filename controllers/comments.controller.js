@@ -43,4 +43,12 @@ module.exports.commentControllers = {
       return res.status(401).json(error.message);
     }
   },
+  getCommentsByNew: async (req, res) => {
+    try {
+     const comments = await Comment.find({news: req.params.id}).populate("user")
+      return res.json(comments)
+    } catch (error) {
+      return res.status(400).json(error.message)
+    }
+  }
 };
