@@ -17,10 +17,13 @@ module.exports.userControllers = {
         login: login,
         password: hash,
       });
+      const data = await res.json(newUser);
 
-      return res.json(newUser);
+      return data;
     } catch (error) {
-      return res.status(401).json(error.message);
+      return res
+        .status(401)
+        .json({ error: "Такой пользователь зарегистрирован" });
     }
   },
 
@@ -79,7 +82,7 @@ module.exports.userControllers = {
         expiresIn: "48h",
       });
 
-      return res.json({ token });
+      return res.json({ userId: payload.id, token });
     } catch (error) {
       return res.status(401).json(error.message);
     }

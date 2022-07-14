@@ -7,9 +7,11 @@ const path = require("path")
 
 const app = express();
 
+app.use(cors());
+
 app.use("/public", express.static(path.resolve(__dirname + "/public")));
 app.use(express.json());
-app.use(cors());
+
 app.use(require("./routes/index"));
 
 mongoose

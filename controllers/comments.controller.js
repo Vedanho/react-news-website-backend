@@ -13,7 +13,7 @@ module.exports.commentControllers = {
 
       return res.json(newComment);
     } catch (error) {
-      return res.status(401).json(error.message);
+      return res.status(401).json({error: 'CONTROLLER' + ' ' + error.message});
     }
   },
   getComments: async (req, res) => {
