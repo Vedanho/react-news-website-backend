@@ -6,7 +6,7 @@ require("dotenv").config();
 module.exports.userControllers = {
   createUser: async (req, res) => {
     try {
-      const { login, password } = req.body;
+      const { login, password, role } = req.body;
 
       const hash = await bcrypt.hash(
         password,
@@ -16,6 +16,7 @@ module.exports.userControllers = {
       const newUser = await User.create({
         login: login,
         password: hash,
+        role: role,
       });
       const data = await res.json(newUser);
 
@@ -76,13 +77,14 @@ module.exports.userControllers = {
       const payload = {
         id: candidate._id,
         login: candidate.login,
+        role: candidate.role,
       };
 
       const token = await jwt.sign(payload, process.env.SECRET_JWT_KEY, {
         expiresIn: "48h",
       });
 
-      return res.json({ userId: payload.id, token });
+      return res.json({ userId: payload.id, role: candidate.role, token });
     } catch (error) {
       return res.status(401).json(error.message);
     }

@@ -1,17 +1,16 @@
 const Comment = require("../models/Comment.model");
-const News = require("../models/News..model");
+const News = require("../models/News.model");
 
 module.exports.newControllers = {
   createNew: async (req, res) => {
     try {
-      const { picture, title, text, category, user } = req.body;
-
+      const { title, text, category } = req.body;
+  
       const createdNew = await News.create({
-        picture,
+        picture: req.file.path,
         title,
         text,
         category,
-        user,
       });
 
       return res.json(createdNew);

@@ -37,8 +37,16 @@ module.exports.commentControllers = {
   },
   deleteComment: async (req, res) => {
     try {
-      await Comment.findByIdAndRemove(req.params.id);
-      return res.json("Комментарий удалён");
+      const { id } = req.params
+
+      const comment = await Comment.findById(id)
+
+      if (comment.user.toString() === req.user.id) {
+        console.log(123);
+        await comment.remove()
+      }
+     
+      return  res.json("Комментарий удалён");
     } catch (error) {
       return res.status(401).json(error.message);
     }
